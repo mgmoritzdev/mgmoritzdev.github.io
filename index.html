@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="App">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css"/>	
+	<script src="node_modules/angular/angular.js"></script>
+	<script src="js/app.js"></script>
+	<title>Sheets as Backend</title>
+</head>
+<body ng-controller="MainCtrl">
+	<table class="table">
+		<tr>
+			<th ng-repeat="l in labels">{{l}}</th>
+		</thead>
+		<tr ng-repeat="d in data">
+			<td ng-repeat="l in labels">{{d[l]}}</td>
+		</tbody>
+	</table>
+</body>
+</html>
