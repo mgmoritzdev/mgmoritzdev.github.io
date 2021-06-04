@@ -1,20 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="App">
-<head>
-	<meta charset="UTF-8">
-	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css"/>	
-	<script src="node_modules/angular/angular.js"></script>
-	<script src="js/app.js"></script>
-	<title>Sheets as Backend</title>
-</head>
-<body ng-controller="MainCtrl">
-	<table class="table">
-		<tr>
-			<th ng-repeat="l in labels">{{l}}</th>
-		</thead>
-		<tr ng-repeat="d in data">
-			<td ng-repeat="l in labels">{{d[l]}}</td>
-		</tbody>
-	</table>
-</body>
+  <head>
+	  <meta charset="UTF-8">
+	  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css"/>
+	  <script src="node_modules/angular/angular.js"></script>
+	  <script src="js/app.js"></script>
+	  <title>Sheets as Backend</title>
+  </head>
+  <body ng-controller="MainCtrl">
+	  <table class="table">
+		  <tr>
+			  <th ng-repeat="l in labels">{{l}}</th>
+      <tr ng-repeat="d in data">
+	      <td ng-repeat="l in labels">{{d[l]}}</td>
+    </table>
+    <h1>
+      Regulamento
+    </h1>
+    <h2>
+      Corrida e Academia
+    </h2>
+    <p>
+      O valor que será usado para o prêmio são os quilômetros percorridos nas corridas.
+    </p>
+    <p>
+      Para não ignorar a importância do treinamento de força, a atividade de 30 minutos ou mais em academia será computada como 3km de corrida.
+    </p>
+    <h2>
+      Duplas
+    </h2>
+    <p>
+      Após a primeira semanas de atividade, formaremos pares entre posições opostas do ranking. O primeiro forma dupla com o último, o segundo com o penúltimo e assim por diante.
+    </p>
+    <h2>
+      Premiação
+    </h2>
+    <p>
+      Cerveja
+    </p>
+  </body>
 </html>
