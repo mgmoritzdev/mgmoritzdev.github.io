@@ -8,7 +8,7 @@ app.controller("MainCtrl", ["$scope", "$http", function($scope, $http) {
 	  method: 'GET',
 	  url: 'https://spreadsheets.google.com/feeds/list/1RvBt-GXz7kKzYj3XLpwatdMNZxKjwq3qqx5sm_WRzb4/1/public/basic?alt=json'
 	}).then(function successCallback(response) {
-	  var rows = [];	
+	  var rows = [];
 	  var labels = [];
 		var cells = response.data.feed.entry;
 
@@ -20,7 +20,6 @@ app.controller("MainCtrl", ["$scope", "$http", function($scope, $http) {
 	    labels.push(keyVal[0].trim());
 	  }
 
-
 		for (var i = 0; i < cells.length; i++){
 		  var rowObj = {};
 		  rowObj.id = cells[i].title.$t;
@@ -31,6 +30,9 @@ app.controller("MainCtrl", ["$scope", "$http", function($scope, $http) {
 		    rowObj[keyVal[0].trim()] = keyVal[1].trim();
 		  }
 		  rows.push(rowObj);
+      if (parseFloat(rows[0].km)) {
+        rows.sort((a, b) => b.km - a.km)
+      }
 		}
 
 		$scope.data = rows;
