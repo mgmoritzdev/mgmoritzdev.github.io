@@ -83,6 +83,7 @@ function draw() {
 }
 
 function drawRunners() {
+  noFill()
   strokeWeight(runnerWeight)
   for(let j = 0; j < runners; j++)
   {
@@ -175,6 +176,7 @@ function drawBackground() {
 function drawTrack() {
   strokeWeight(1)
   stroke(255)
+  noFill()
   line(
     padding,
     padding - lane,
