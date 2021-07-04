@@ -1,10 +1,10 @@
 let runners = 6
-const runnerWeight = 8
-const lane = 20
+let runnerWeight = 8
+let lane = 20
 const nLanes = runners + 1
 let width = 800
-const height = 600
-const padding = 150
+let height = 500
+let padding = 150
 
 let scale = 1
 let runnersLength = []
@@ -13,7 +13,7 @@ let colors = []
 
 
 function setup() {
-  width = document.getElementById('sketch-holder').offsetWidth
+  recalculateScale()
   const canvas = createCanvas(width, height)
   canvas.parent('sketch-holder');
 
@@ -27,9 +27,18 @@ function setup() {
 }
 
 function windowResized() {
-  width = document.getElementById('sketch-holder').offsetWidth
+  recalculateScale()
   resizeCanvas(width, height);
 }
+
+function recalculateScale() {
+  width = document.getElementById('sketch-holder').offsetWidth
+  height = 2 * width / 3
+  padding = height / 4
+  lane = height / 30
+  runnerWeight = lane / 2
+}
+
 
 function draw() {
   noFill()
@@ -216,7 +225,7 @@ function drawLabels() {
   {
     fill(0)
     strokeWeight(0)
-    const x = 1.2 * padding + Math.floor(n / 3) * padding
+    const x = 1.2 * padding + Math.floor(n / 3) * 2 * padding
     const y = height - 0.75 * padding + (n % 3) * 20
     text(`${names[n]}:\t ${runnersLength[n]}`, x, y)
     fill(colors[n])
