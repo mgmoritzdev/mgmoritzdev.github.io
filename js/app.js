@@ -13,11 +13,17 @@ app.controller("MainCtrl", ["$scope", "$http", function($scope, $http) {
 		var cells = response.data.feed.entry;
 
 		var rowCols = cells[0].content.$t.split(',');
+    var colorIndex = 0
 
 		labels.push("id");
 		for (var j = 0; j < rowCols.length; j++){
 	    var keyVal = rowCols[j].split(':');
-	    labels.push(keyVal[0].trim());
+      if (keyVal[0].trim() === 'color')
+      {
+        colorIndex = j
+      } else {
+	      labels.push(keyVal[0].trim());
+      }
 	  }
 
 		for (var i = 0; i < cells.length; i++){
@@ -26,8 +32,11 @@ app.controller("MainCtrl", ["$scope", "$http", function($scope, $http) {
 		  var rowCols = cells[i].content.$t.split(',');
 
 	  	for (var j = 0; j < rowCols.length; j++){
-		    var keyVal = rowCols[j].split(':');
-		    rowObj[keyVal[0].trim()] = keyVal[1].trim();
+        if (j !== colorIndex)
+        {
+		      var keyVal = rowCols[j].split(':');
+		      rowObj[keyVal[0].trim()] = keyVal[1].trim();
+        }
 		  }
 		  rows.push(rowObj);
       if (parseFloat(rows[0].km)) {

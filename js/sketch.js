@@ -2,75 +2,33 @@ let runners = 6
 const runnerWeight = 8
 const lane = 20
 const nLanes = runners + 1
-const width = 800
+let width = 800
 const height = 600
 const padding = 150
 
 let scale = 1
 let runnersLength = []
 let names = []
+let colors = []
 
-const colors = [
-  {
-    r: 165,
-    g: 0,
-    b: 0
-  },
-  {
-    r: 0,
-    g: 165,
-    b: 0
-  },
-  {
-    r: 0,
-    g: 0,
-    b: 165
-  },
-  {
-    r: 165,
-    g: 165,
-    b: 0
-  },
-  {
-    r: 165,
-    g: 0,
-    b: 165
-  },
-  {
-    r: 0,
-    g: 165,
-    b: 165
-  },
-  {
-    r: 20,
-    g: 20,
-    b: 20
-  },
-  {
-    r: 80,
-    g: 80,
-    b: 80
-  },
-  {
-    r: 160,
-    g: 160,
-    b: 160
-  },
-  {
-    r: 240,
-    g: 240,
-    b: 240
-  }
-]
 
 function setup() {
-  createCanvas(width, height)
+  width = document.getElementById('sketch-holder').offsetWidth
+  const canvas = createCanvas(width, height)
+  canvas.parent('sketch-holder');
+
   const data = fetchData().then(response => {
     names = response.map(entry => entry.id)
     runnersLength = response.map(entry => parseFloat(entry.km))
     runners = runnersLength.length
+    colors = response.map(entry => color(entry.color))
     scale = Math.ceil(Math.max.apply(null, runnersLength) / 40) * 40 / 4
   })
+}
+
+function windowResized() {
+  width = document.getElementById('sketch-holder').offsetWidth
+  resizeCanvas(width, height);
 }
 
 function draw() {
@@ -83,11 +41,16 @@ function draw() {
 }
 
 function drawRunners() {
+  if (!names.length){
+    return
+  }
+
   noFill()
   strokeWeight(runnerWeight)
+
   for(let j = 0; j < runners; j++)
   {
-    stroke(colors[j].r, colors[j].g, colors[j].b)
+    stroke(colors[j])
     if (runnersLength[j] > 0)
     {
       const lengthRatio = runnersLength[j] >= scale ?
@@ -256,7 +219,7 @@ function drawLabels() {
     const x = 1.2 * padding + Math.floor(n / 3) * padding
     const y = height - 0.75 * padding + (n % 3) * 20
     text(`${names[n]}:\t ${runnersLength[n]}`, x, y)
-    fill(colors[n].r, colors[n].g, colors[n].b)
+    fill(colors[n])
     rect(x - 15, y - 8, 8, 8)
     fill(0)
   }
