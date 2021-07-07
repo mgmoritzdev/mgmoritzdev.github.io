@@ -59,6 +59,8 @@ function drawRunners() {
 
   for(let j = 0; j < runners; j++)
   {
+    const fillColor = colors[j]
+    fillColor.setAlpha(255)
     stroke(colors[j])
     if (runnersLength[j] > 0)
     {
