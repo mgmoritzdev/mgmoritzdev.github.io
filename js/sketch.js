@@ -32,7 +32,19 @@ const getTeams = (data) => {
   return teams
 }
 const countTeams = (data) => getTeams(data).length
-const getScale = (data) => Math.ceil(Math.max.apply(null, getLength(data)) / 40) * 40 / 4
+const getScale = (data) => Math.ceil(getMaxLength(data) / 40) * 40 / 4
+const isDrawingTeams = (data) => countTeams(data) <= 1
+const getMaxLength = (data) => {
+  if (isDrawingTeams) {
+    const teams = getTeams(data)
+    const lengths = teams.map(team =>
+        team.reduce((t1, t2) => parseFloat(t1.km) + parseFloat(t2.km)))
+    return Math.max(...lengths)
+  } else {
+    const lengths = getLength(data)
+    return Math.max(...lengths)
+  }
+}
 
 function windowResized() {
   recalculateScale()
@@ -55,13 +67,13 @@ function draw() {
   if (data)
   {
     drawTrack()
-    if (countTeams(data) === 0)
+    if (isDrawingTeams(data))
     {
       drawRunnerLabels()
       drawRunners()
     } else {
-        drawTeams()
-        drawTeamLabels()
+      drawTeams()
+      drawTeamLabels()
     }
   }
 }
@@ -347,25 +359,44 @@ function drawTeamLabels() {
     padding - 20,
     height - padding + 30)
 
-
   teams.forEach((team, n) => {
     const teamNames = getNames(team)
-    console.log('teamNames', teamNames)
     const teamLength = getLength(team)
     const teamColors = getColors(team)
 
     const name = teamNames.reduce((t1, t2) => `${t1}/${t2}`)
     const runnersLength = teamLength.reduce((t1, t2) => t1 + t2)
-    console.log('runnersLength', runnersLength)
 
     fill(0)
     strokeWeight(0)
-    const x = 1.2 * padding + Math.floor(n / 3) * 2 * padding
+    const x = 1.4 * padding + Math.floor(n / 3) * 2 * padding
     const y = height - 0.75 * padding + (n % 3) * 20
-    text(`${name}:\t ${runnersLength}`, x, y)
-    // fill(teamColors[n])
-    // rect(x - 15, y - 8, x - 15, y, x - 7, y)
-    // rect(x - 15, y - 8, x - y, y - 8, x - 7, y)
+    textAlign(LEFT);
+    text(name, x, y)
+    textAlign(RIGHT);
+    text(runnersLength, x + 120, y)
+
+    teamColors.forEach((color, index) => {
+      fill(color)
+      const rectSize = 15
+      const pairNumber = Math.floor(index / 2)
+      const rectTextDistance = 8 * (pairNumber + 1)
+      const isPair = index % 2 === 0
+
+      if (isPair) {
+        triangle(
+          x - rectTextDistance - rectSize, y - rectSize,
+          x - rectTextDistance - rectSize, y,
+          x - 7, y)
+      } else {
+        triangle(
+          x - rectTextDistance - rectSize, y - rectSize,
+          x - rectTextDistance, y - rectSize,
+          x - rectTextDistance, y)
+      }
+    })
+
+    textAlign(LEFT);
     fill(0)
   })
 }
