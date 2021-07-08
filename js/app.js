@@ -14,15 +14,20 @@ app.controller("MainCtrl", ["$scope", "$http", function($scope, $http) {
 
 		var rowCols = cells[0].content.$t.split(',');
     var colorIndex = 0
+    var teamIndex = 0
 
 		labels.push("id");
 		for (var j = 0; j < rowCols.length; j++){
 	    var keyVal = rowCols[j].split(':');
-      if (keyVal[0].trim() === 'color')
-      {
+      switch (keyVal[0].trim()) {
+      case 'color':
         colorIndex = j
-      } else {
-	      labels.push(keyVal[0].trim());
+        break;
+      case 'team':
+        teamIndex = j
+        break;
+      default:
+        labels.push(keyVal[0].trim());
       }
 	  }
 
@@ -32,7 +37,7 @@ app.controller("MainCtrl", ["$scope", "$http", function($scope, $http) {
 		  var rowCols = cells[i].content.$t.split(',');
 
 	  	for (var j = 0; j < rowCols.length; j++){
-        if (j !== colorIndex)
+        if (j !== colorIndex || j !== teamIndex)
         {
 		      var keyVal = rowCols[j].split(':');
 		      rowObj[keyVal[0].trim()] = keyVal[1].trim();
