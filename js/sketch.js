@@ -227,12 +227,13 @@ function drawTeams() {
           height - padding - j * lane - lane / 2)
       }
 
-      if (runnersLength[j] > 3 * scale)
+      if (position > 3 * scale)
       {
-        const lengthRatio = runnersLength[j] >= 4 * scale ?
+        const lengthRatio = position >= 4 * scale ?
               1 :
-              (runnersLength[j] - 3 * scale) / scale
+              (position - 3 * scale) / scale
 
+        console.log('lengthRatio', lengthRatio)
         const endAngle = PI / 2 + PI * lengthRatio
 
         arc(
