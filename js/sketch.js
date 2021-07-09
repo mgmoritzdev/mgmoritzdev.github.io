@@ -218,12 +218,12 @@ function drawTeams() {
 
         const startPositionLengthRatio = startPosition <= 2 * scale ?
               0 :
-              ((startPosition - 2 * scale) / scale)
+              (startPosition - 2 * scale) / scale
 
         line(
           padding + (1 - lengthRatio) * (width - 2 * padding),
           height - padding - j * lane - lane / 2,
-          width - padding - startPositionLengthRatio * (width - padding),
+          width - padding - startPositionLengthRatio * (width - 2 * padding),
           height - padding - j * lane - lane / 2)
       }
 
@@ -365,7 +365,7 @@ function drawTeamLabels() {
     const teamColors = getColors(team)
 
     const name = teamNames.reduce((t1, t2) => `${t1}/${t2}`)
-    const runnersLength = teamLength.reduce((t1, t2) => t1 + t2)
+    const runnersLength = nf(teamLength.reduce((t1, t2) => t1 + t2), 0, 2)
 
     fill(0)
     strokeWeight(0)
