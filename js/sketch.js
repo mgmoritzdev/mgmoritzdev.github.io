@@ -33,9 +33,9 @@ const getTeams = (data) => {
 }
 const countTeams = (data) => getTeams(data).length
 const getScale = (data) => Math.ceil(getMaxLength(data) / 40) * 40 / 4
-const isDrawingTeams = (data) => countTeams(data) <= 1
+const isDrawingTeams = (data) => countTeams(data) > 1
 const getMaxLength = (data) => {
-  if (isDrawingTeams) {
+  if (isDrawingTeams(data)) {
     const teams = getTeams(data)
     const lengths = teams.map(team =>
         team.reduce((t1, t2) => parseFloat(t1.km) + parseFloat(t2.km)))
@@ -69,11 +69,11 @@ function draw() {
     drawTrack()
     if (isDrawingTeams(data))
     {
-      drawRunnerLabels()
-      drawRunners()
-    } else {
       drawTeams()
       drawTeamLabels()
+    } else {
+      drawRunnerLabels()
+      drawRunners()
     }
   }
 }
