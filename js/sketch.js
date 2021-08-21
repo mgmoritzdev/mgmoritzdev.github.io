@@ -16,7 +16,7 @@ function setup() {
   })
 }
 
-const getNames = (data) => data.map(entry => entry.id)
+const getNames = (data) => data.map(entry => entry.nome)
 const getLength = (data) => data.map(entry => parseFloat(entry.km))
 const countRunners = (data) => getNames(data).length
 const getColors = (data) => data.map(entry => color(entry.color))
@@ -439,39 +439,28 @@ function drawRunnerLabels() {
 }
 
 function fetchData() {
-  return fetch('https://spreadsheets.google.com/feeds/list/1RvBt-GXz7kKzYj3XLpwatdMNZxKjwq3qqx5sm_WRzb4/1/public/basic?alt=json', {
+  return fetch('https://docs.google.com/spreadsheets/d/1RvBt-GXz7kKzYj3XLpwatdMNZxKjwq3qqx5sm_WRzb4/gviz/tq?tqx=out:json', {
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'text/plain',
     }
   })
-    .then(response => response.json())
+    .then(response => response.text())
     .then(data => {
-      var rows = [];
-	    var labels = [];
-		  var cells = data.feed.entry;
-
-		  var rowCols = cells[0].content.$t.split(',');
-
-		  labels.push("id");
-		  for (var j = 0; j < rowCols.length; j++){
-	      var keyVal = rowCols[j].split(':');
-	      labels.push(keyVal[0].trim());
-	    }
-
-		  for (var i = 0; i < cells.length; i++){
-		    var rowObj = {};
-		    rowObj.id = cells[i].title.$t;
-		    var rowCols = cells[i].content.$t.split(',');
-
-	  	  for (var j = 0; j < rowCols.length; j++){
-		      var keyVal = rowCols[j].split(':');
-		      rowObj[keyVal[0].trim()] = keyVal[1].trim();
-		    }
-		    rows.push(rowObj);
-        if (parseFloat(rows[0].km)) {
-          rows.sort((a, b) => b.km - a.km)
+      const r = data.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\)/)
+      data = (JSON.parse(r[1])).table
+      const labels = data.cols.map(d => d.label).filter(l => l)
+      const rows = []
+      data.rows.forEach(r => {
+        const rowObj = {}
+        for(let l = 0; l < labels.length; l++){
+          rowObj[labels[l]] = r.c[l].f ?? r.c[l].v
         }
-		  }
+        rows.push(rowObj)
+      })
+
+      if (parseFloat(rows[0].km)) {
+        rows.sort((a, b) => b.km - a.km)
+      }
 
 		  return rows;
     })

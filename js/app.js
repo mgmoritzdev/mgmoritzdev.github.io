@@ -6,51 +6,27 @@ app.controller("MainCtrl", ["$scope", "$http", function($scope, $http) {
 
 	$http({
 	  method: 'GET',
-	  url: 'https://spreadsheets.google.com/feeds/list/1RvBt-GXz7kKzYj3XLpwatdMNZxKjwq3qqx5sm_WRzb4/1/public/basic?alt=json'
+	  url: 'https://docs.google.com/spreadsheets/d/1RvBt-GXz7kKzYj3XLpwatdMNZxKjwq3qqx5sm_WRzb4/gviz/tq?tqx=out:json'
 	}).then(function successCallback(response) {
-	  var rows = [];
-	  var labels = [];
-		var cells = response.data.feed.entry;
-
-		var rowCols = cells[0].content.$t.split(',');
-    var colorIndex = 0
-    var teamIndex = 0
-
-		labels.push("id");
-		for (var j = 0; j < rowCols.length; j++){
-	    var keyVal = rowCols[j].split(':');
-      switch (keyVal[0].trim()) {
-      case 'color':
-        colorIndex = j
-        break;
-      case 'team':
-        teamIndex = j
-        break;
-      default:
-        labels.push(keyVal[0].trim());
+		let data = response.data
+    const r = data.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\)/)
+    data = (JSON.parse(r[1])).table
+    const labels = data.cols.map(d => d.label).filter(l => l)
+    const rows = []
+    data.rows.forEach(r => {
+      const rowObj = {}
+      for(let l = 0; l < labels.length; l++){
+        rowObj[labels[l]] = r.c[l].f ?? r.c[l].v
       }
-	  }
+      rows.push(rowObj)
+    })
+    if (parseFloat(rows[0].km)) {
+      rows.sort((a, b) => b.km - a.km)
+    }
 
-		for (var i = 0; i < cells.length; i++){
-		  var rowObj = {};
-		  rowObj.id = cells[i].title.$t;
-		  var rowCols = cells[i].content.$t.split(',');
-
-	  	for (var j = 0; j < rowCols.length; j++){
-        if (j !== colorIndex || j !== teamIndex)
-        {
-		      var keyVal = rowCols[j].split(':');
-		      rowObj[keyVal[0].trim()] = keyVal[1].trim();
-        }
-		  }
-		  rows.push(rowObj);
-      if (parseFloat(rows[0].km)) {
-        rows.sort((a, b) => b.km - a.km)
-      }
-		}
-
-		$scope.data = rows;
-		$scope.labels = labels;
+    const displayLabels = ['nome', 'km']
+		$scope.data = rows
+		$scope.labels = labels.filter(i => displayLabels.includes(i))
 	  }, function errorCallback(response) {
 	    // called asynchronously if an error occurs
 	    // or server returns response with an error status.
