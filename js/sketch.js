@@ -233,7 +233,6 @@ function drawTeams() {
               1 :
               (position - 3 * scale) / scale
 
-        console.log('lengthRatio', lengthRatio)
         const endAngle = PI / 2 + PI * lengthRatio
 
         arc(
