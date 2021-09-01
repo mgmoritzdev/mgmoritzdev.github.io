@@ -452,7 +452,7 @@ function fetchData() {
       data.rows.forEach(r => {
         const rowObj = {}
         for(let l = 0; l < labels.length; l++){
-          rowObj[labels[l]] = r.c[l].f ?? r.c[l].v
+          rowObj[labels[l]] = r.c[l]?.f ?? r.c[l]?.v
         }
         rows.push(rowObj)
       })
